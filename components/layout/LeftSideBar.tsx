@@ -14,7 +14,7 @@ const LeftSideBar = () => {
       className="h-screen left-0 top-0 sticky p-10
      flex flex-col gap-16 bg-blue-2 shadow-xl max-lg:hidden"
     >
-      <Image src="/logo.png " alt="logo" width={160} height={70} />
+      <Image src="/logo.png" alt="logo" width={160} height={70} />
 
       <div className="flex flex-col gap-12">
         {/* Nav Links */}
