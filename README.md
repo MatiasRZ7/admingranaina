@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+La Granaina Admin dashboard
 
-## Getting Started
+This project is a full-stack web application built with Next.js. It's designed to manage collections, products, customers and orders in an online store.
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Frontend: 
+The frontend is built with Next.js, a React framework that enables features like server-side rendering and generating static websites for React based web applications.
+UI Components: We're using a combination of custom UI components and components from the lucide-react library.
 
-## Learn More
+Routing: Routing is handled by Next.js Router, which allows for dynamic routing and supports both client-side and server-side routing.
 
-To learn more about Next.js, take a look at the following resources:
+Styling: Styling is done using Tailwind CSS, a utility-first CSS framework.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Backend: The backend API is built with Next.js API routes, which allows us to build our API endpoints with the same simplicity as Next.js pages.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Data Fetching: Data fetching is done using the Fetch API to interact with the backend API routes.
 
-## Deploy on Vercel
+This application uses Clerk for user management and authentication.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Libraries Used:
+
+Next.js,
+React,
+lucide-react,
+Tailwind CSS
+
+I used Cloudinary, a cloud-based image and video management service to upload images and then display them in https://granaina-store.vercel.app
+
+![dashboard admin](https://github.com/MatiasRZ7/admingranaina/assets/160002289/c7c5e6f7-96e7-40dd-8ff9-44e90704791f)
+
+
+![collections admin](https://github.com/MatiasRZ7/admingranaina/assets/160002289/5f7bda90-c201-4917-bd02-2f3b544ccb4e)
+
+
+![products admin](https://github.com/MatiasRZ7/admingranaina/assets/160002289/0eaafcaf-9ac9-4824-be12-d1c5f8d58e26)
+
+
+![orders admin](https://github.com/MatiasRZ7/admingranaina/assets/160002289/6f451cee-bf88-4b20-90cc-99702f5b4151)
