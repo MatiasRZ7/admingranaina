@@ -29,4 +29,8 @@ export const columns: ColumnDef<OrderColumnType>[] = [
     accessorKey: "createdAt",
     header: "Created At",
   },
+  {
+    accessorKey: "dateAdded",
+    header: "Date Added",
+  },
 ];
