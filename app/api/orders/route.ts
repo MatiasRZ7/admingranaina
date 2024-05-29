@@ -27,7 +27,7 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.json(ordersDetails, { status: 200 });
   } catch (err) {
     console.log("[orders_GET]", err);
-    return new NextResponse("An error occurred", { status: 500 });
+    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }
 };
 
