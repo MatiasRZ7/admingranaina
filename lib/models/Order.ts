@@ -26,6 +26,9 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  dateAdded: {
+    type: Date,
+  },
 });
 const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
 
