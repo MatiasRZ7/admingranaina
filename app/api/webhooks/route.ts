@@ -55,6 +55,8 @@ export const POST = async (req: NextRequest) => {
           color: item.price.product.metadata.color || "N/A",
           size: item.price.product.metadata.size || "N/A",
           quantity: item.quantity,
+          // get the date added from the product metadata or use the current date
+          dateAdded: item.price.product.metadata.dateAdded || new Date().toISOString(),
         };
       });
       await connectToDB();

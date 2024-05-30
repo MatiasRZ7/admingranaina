@@ -31,6 +31,6 @@ export const columns: ColumnDef<OrderColumnType>[] = [
   },
   {
     accessorKey: "dateAdded",
-    header: "Date Added",
+    header: "Tour el dia:",
   },
 ];
