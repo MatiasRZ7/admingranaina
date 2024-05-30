@@ -4,6 +4,12 @@ import { connectToDB } from "@/lib/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 import { format } from "date-fns";
 
+// Define the CORS headers for the response
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
 
 // GET method to get all orders
 export const GET = async (req: NextRequest) => {
@@ -24,10 +30,10 @@ export const GET = async (req: NextRequest) => {
         }
     }));
 
-    return NextResponse.json(ordersDetails, { status: 200 });
+    return NextResponse.json(ordersDetails, { status: 200, headers: corsHeaders });
   } catch (err) {
     console.log("[orders_GET]", err);
-    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
+    return NextResponse.json({ message: "An error occurred" }, { status: 500, headers: corsHeaders });
   }
 };
 

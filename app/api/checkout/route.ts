@@ -59,6 +59,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(session, { headers: corsHeaders });
   } catch (err) {
     console.log("[checkout_POST]", err);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse("Internal Server Error", { status: 500, headers: corsHeaders});
   }
 }
