@@ -30,7 +30,6 @@ export async function POST(req: NextRequest) {
       },
       shipping_options: [
         { shipping_rate: "shr_1PCElBRv5nV0ahQXA23Gv823" },
-        { shipping_rate: "shr_1PCEkSRv5nV0ahQXdRCMDGgF" },
       ],
       // information about the customer who is checking out
       line_items: cartItems.map((cartItem: any) => ({
@@ -43,6 +42,7 @@ export async function POST(req: NextRequest) {
               productId: cartItem.item._id,
               ...(cartItem.size && { size: cartItem.size }),
               ...(cartItem.color && { color: cartItem.color }),
+              dataAdded: cartItem.dateAdded.toISOString(),
             },
           },
           unit_amount: cartItem.item.price * 100,

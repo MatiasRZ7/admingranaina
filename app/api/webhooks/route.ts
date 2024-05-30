@@ -21,6 +21,10 @@ export const POST = async (req: NextRequest) => {
       // Get the session object from the event
       const session = event.data.object;
       console.log("[webhooks_POST]", session);
+
+      // extract the date from the session object
+      const selectedDate =
+        session?.metadata?.dateAdded || new Date().toISOString();
       // Get the customer information from the session object
       const customerInfo = {
         clerkId: session?.client_reference_id,
@@ -62,6 +66,8 @@ export const POST = async (req: NextRequest) => {
         shippingRate: session?.shipping_cost?.shipping_rate,
         // we divide the total amount by 100 to get the amount in dollars
         totalAmount: session.amount_total ? session.amount_total / 100 : 0,
+        // we get the date of the order
+        dateAdded: new Date(selectedDate),
       });
       // save the order to the database
       await newOrder.save();
