@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
               productId: cartItem.item._id,
               ...(cartItem.size && { size: cartItem.size }),
               ...(cartItem.color && { color: cartItem.color }),
-              dataAdded: cartItem.dateAdded.toISOString(),
+              dataAdded: cartItem.dateAdded instanceof Date ? cartItem.dateAdded.toISOString() : null,
             },
           },
           unit_amount: cartItem.item.price * 100,
