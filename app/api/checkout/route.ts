@@ -45,7 +45,8 @@ export async function POST(req: NextRequest) {
               dataAdded: cartItem.dateAdded instanceof Date ? cartItem.dateAdded.toISOString() : null,
             },
           },
-          unit_amount: cartItem.item.price * 100,
+          // calculate 10% of the item price and convert it to cents
+          unit_amount: Math.round(cartItem.item.price * 10),
         },
         quantity: cartItem.quantity,
       })),
