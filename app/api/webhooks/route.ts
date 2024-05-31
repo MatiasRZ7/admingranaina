@@ -57,7 +57,7 @@ export const POST = async (req: NextRequest) => {
             size: item.price.product.metadata.size || "N/A",
             quantity: item.quantity,
             // get the date added from the metadata or use the current date
-            dateAdded: item.metadata.dateAdded || new Date().toISOString(),
+            dateAdded: (typeof item.metadata.dateAdded === 'string' && !isNaN(Date.parse(item.metadata.dateAdded))) ? item.metadata.dateAdded : new Date().toISOString(),
           };
         }) || [];
       await connectToDB();
@@ -71,7 +71,7 @@ export const POST = async (req: NextRequest) => {
         totalAmount: session.amount_total ? session.amount_total / 100 : 0,
         // we get the date of the order
         // we get the date of the order
-        dateAdded: orderItems[0]?.dateAdded || new Date().toISOString(),
+        dateAdded: (typeof orderItems[0]?.dateAdded === 'string' && !isNaN(Date.parse(orderItems[0]?.dateAdded))) ? orderItems[0]?.dateAdded : new Date().toISOString(),
       });
       // save the order to the database
       await newOrder.save();
