@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
               productId: cartItem.item._id,
               ...(cartItem.size && { size: cartItem.size }),
               ...(cartItem.color && { color: cartItem.color }),
-              dateAdded: (typeof cartItem.dateAdded === 'string' && !isNaN(Date.parse(cartItem.dateAdded))) ? cartItem.dateAdded : undefined,
+              dateAdded: cartItem.dateAdded instanceof Date ? cartItem.dateAdded.toISOString() : null,
             },
           },
           // calculate 10% of the item price and convert it to cents
