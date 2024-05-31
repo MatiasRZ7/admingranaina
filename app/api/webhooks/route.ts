@@ -49,16 +49,17 @@ export const POST = async (req: NextRequest) => {
       // Get the line items from the session object
       const lineItems = await retrieveSession?.line_items?.data;
       // Map the line items to get the product IDs
-      const orderItems = lineItems?.map((item: any) => {
-        return {
-          product: item.price.product.metadata.productId,
-          color: item.price.product.metadata.color || "N/A",
-          size: item.price.product.metadata.size || "N/A",
-          quantity: item.quantity,
-          // get the date added from the product metadata or use the current date
-          dateAdded: item.price.product.metadata.dateAdded || new Date().toISOString(),
-        };
-      });
+      const orderItems =
+        lineItems?.map((item: any) => {
+          return {
+            product: item.price.product.metadata.productId,
+            color: item.price.product.metadata.color || "N/A",
+            size: item.price.product.metadata.size || "N/A",
+            quantity: item.quantity,
+            // get the date added from the metadata or use the current date
+            dateAdded: item.metadata.dateAdded || new Date().toISOString(),
+          };
+        }) || [];
       await connectToDB();
       // newOrder contains the customer clerk ID, the products, the shipping address and the total amount
       const newOrder = new Order({
@@ -69,7 +70,8 @@ export const POST = async (req: NextRequest) => {
         // we divide the total amount by 100 to get the amount in dollars
         totalAmount: session.amount_total ? session.amount_total / 100 : 0,
         // we get the date of the order
-        dateAdded: new Date(selectedDate),
+        // we get the date of the order
+        dateAdded: orderItems[0]?.dateAdded || new Date().toISOString(),
       });
       // save the order to the database
       await newOrder.save();
