@@ -16,15 +16,40 @@ export const POST = async (req: NextRequest) => {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-    // check the type of the event
+    // Check the type of the event
     if (event.type === "checkout.session.completed") {
       // Get the session object from the event
       const session = event.data.object;
-      console.log("[webhooks_POST]", session);
+      console.log("[webhooks_POST] Session:", session);
+      // Retrieve the session to get the line items
+      const retrieveSession = await stripe.checkout.sessions.retrieve(
+        session.id,
+        {
+          expand: ["line_items.data.price.product"],
+        }
+      );
+      console.log("[webhooks_POST] Retrieved Session with Line Items:", retrieveSession);
 
-      // extract the date from the session object
-      const selectedDate =
-        session?.metadata?.dateAdded || new Date().toISOString();
+      // Get the line items from the session
+      const lineItems = retrieveSession?.line_items?.data;
+      console.log("[webhooks_POST] Line Items:", lineItems);
+
+      // Map the line items to get the product IDs
+      const orderItems = lineItems
+        ? lineItems.map((item: any) => {
+            return {
+              product: item.price.product.metadata.productId,
+              color: item.price.product.metadata.color || "N/A",
+              size: item.price.product.metadata.size || "N/A",
+              quantity: item.quantity,
+              dateAdded: item.price.product.metadata.dateAdded,
+            };
+          })
+        : [];
+
+      console.log("[webhooks_POST] Order Items:", orderItems);
+
+      // Rest of your code...
       // Get the customer information from the session object
       const customerInfo = {
         clerkId: session?.client_reference_id,
@@ -39,57 +64,35 @@ export const POST = async (req: NextRequest) => {
         postalCode: session?.shipping_details?.address?.postal_code,
         country: session?.shipping_details?.address?.country,
       };
-      // Get the items from the session object
-      const retrieveSession = await stripe.checkout.sessions.retrieve(
-        session.id,
-        {
-          expand: ["line_items.data.price.product"],
-        }
-      );
-      // Get the line items from the session object
-      const lineItems = await retrieveSession?.line_items?.data;
-      // Map the line items to get the product IDs
-      const orderItems = lineItems?.map((item: any) => {
-        return {
-          product: item.price.product.metadata.productId,
-          color: item.price.product.metadata.color || "N/A",
-          size: item.price.product.metadata.size || "N/A",
-          quantity: item.quantity,
-          // get the date added from the product metadata or use the current date
-          dateAdded: item.price.product.metadata.dateAdded || new Date().toISOString(),
-        };
-      });
+
       await connectToDB();
-      // newOrder contains the customer clerk ID, the products, the shipping address and the total amount
+
+      // Create a new order with the customer clerk ID, products, shipping address, and total amount
       const newOrder = new Order({
         customerClerkId: customerInfo.clerkId,
         products: orderItems,
         shippingAddress,
         shippingRate: session?.shipping_cost?.shipping_rate,
-        // we divide the total amount by 100 to get the amount in dollars
         totalAmount: session.amount_total ? session.amount_total / 100 : 0,
-        // we get the date of the order
-        dateAdded: new Date(selectedDate),
+        dateAdded: orderItems.length > 0 ? new Date(orderItems[0].dateAdded) : new Date(),
       });
-      // save the order to the database
+      // Save the order to the database
       await newOrder.save();
 
       let customer = await Customer.findOne({ clerkId: customerInfo.clerkId });
       if (customer) {
-        // if the customer exists, we push the order to the customer's orders array
+        // If the customer exists, push the order to the customer's orders array
         customer.orders.push(newOrder._id);
-
-        // if the customer does not exist, we create a new customer with the order
       } else {
+        // If the customer does not exist, create a new customer with the order
         customer = new Customer({
-          // spread the customerInfo object and add the orders array
           ...customerInfo,
           orders: [newOrder._id],
         });
       }
       await customer.save();
     }
-    // return a success response
+    // Return a success response
     return new NextResponse("Order created successfully", { status: 200 });
   } catch (err) {
     console.log("[webhooks_POST]", err);

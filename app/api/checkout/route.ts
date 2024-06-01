@@ -7,21 +7,27 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
+
 // OPTIONS method for CORS
 export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
 }
+
 // POST method to create a new checkout session
 export async function POST(req: NextRequest) {
   try {
-    // first we get the cart items and the customer data from the request body
+    // Get the cart items and the customer data from the request body
     const { cartItems, customer } = await req.json();
+    console.log("[checkout_POST] Cart Items:", cartItems);
     if (!cartItems || !customer) {
       return new NextResponse("Cart items and customer data are required", {
         status: 400,
       });
     }
-    // then we create a new checkout session
+    cartItems.forEach((cartItem: any, index: number) => {
+      console.log(`[checkout_POST] Cart Item ${index + 1} dateAdded:`, cartItem.dateAdded);
+    });
+    // Create a new checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -31,35 +37,31 @@ export async function POST(req: NextRequest) {
       shipping_options: [
         { shipping_rate: "shr_1PCElBRv5nV0ahQXA23Gv823" },
       ],
-      // information about the customer who is checking out
       line_items: cartItems.map((cartItem: any) => ({
         price_data: {
           currency: "eur",
           product_data: {
             name: cartItem.item.title,
-            // metadata if we want to store additional information
             metadata: {
               productId: cartItem.item._id,
               ...(cartItem.size && { size: cartItem.size }),
               ...(cartItem.color && { color: cartItem.color }),
-              dateAdded: cartItem.dateAdded instanceof Date ? cartItem.dateAdded.toISOString() : null,
+              dateAdded: cartItem.dateAdded ? new Date(cartItem.dateAdded).toISOString() : new Date().toISOString(),
             },
           },
-          // calculate 10% of the item price and convert it to cents
           unit_amount: Math.round(cartItem.item.price * 10),
         },
         quantity: cartItem.quantity,
       })),
-      // reference to the customer
       client_reference_id: customer.clerkId,
-      // success and cancel URLs when the payment is successful or canceled
       success_url: `${process.env.ECOMMERCE_STORE_URL}/payment_success`,
       cancel_url: `${process.env.ECOMMERCE_STORE_URL}/cart`,
     });
-    // return the session to the client to redirect to the checkout page
+    console.log("[checkout_POST] Created Session:", session);
+
     return NextResponse.json(session, { headers: corsHeaders });
   } catch (err) {
     console.log("[checkout_POST]", err);
-    return new NextResponse("Internal Server Error", { status: 500, headers: corsHeaders});
+    return new NextResponse("Internal Server Error", { status: 500, headers: corsHeaders });
   }
 }
