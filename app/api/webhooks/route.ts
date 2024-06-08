@@ -41,6 +41,9 @@ export const POST = async (req: NextRequest) => {
               product: item.price.product.metadata.productId,
               color: item.price.product.metadata.color || "N/A",
               size: item.price.product.metadata.size || "N/A",
+              childrenQuantity: item.price.product.metadata.childrenQuantity || "N/A",
+              hotelName: item.price.product.metadata.hotelName || "N/A",
+              pickupTime: item.price.product.metadata.pickupTime || "N/A",
               quantity: item.quantity,
               dateAdded: item.price.product.metadata.dateAdded,
             };

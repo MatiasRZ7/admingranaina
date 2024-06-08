@@ -35,7 +35,6 @@ export async function POST(req: NextRequest) {
         allowed_countries: ["US", "CA", "DE", "GB", "FR", "IT", "ES"],
       },
       shipping_options: [
-        { shipping_rate: "shr_1PCElBRv5nV0ahQXA23Gv823" },
       ],
       line_items: cartItems.map((cartItem: any) => ({
         price_data: {
@@ -46,10 +45,13 @@ export async function POST(req: NextRequest) {
               productId: cartItem.item._id,
               ...(cartItem.size && { size: cartItem.size }),
               ...(cartItem.color && { color: cartItem.color }),
+              ...(cartItem.childrenQuantity && { childrenQuantity: cartItem.childrenQuantity }),
+              ...(cartItem.hotelName && { hotelName: cartItem.hotelName }),
+              ...(cartItem.pickupTime && { pickupTime: cartItem.pickupTime }),
               dateAdded: cartItem.dateAdded ? new Date(cartItem.dateAdded).toISOString() : new Date().toISOString(),
             },
           },
-          unit_amount: Math.round(cartItem.item.price * 10),
+          unit_amount: Math.round(cartItem.item.price * 50),
         },
         quantity: cartItem.quantity,
       })),
