@@ -29,6 +29,15 @@ const orderSchema = new mongoose.Schema({
   dateAdded: {
     type: Date,
   },
+  hotelName: {
+    type: String,
+  },
+  pickupTime: {
+    type: String,
+  },
+  childrenQuantity: {
+    type: Number,
+  },
 });
 const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
 

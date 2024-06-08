@@ -78,6 +78,9 @@ export const POST = async (req: NextRequest) => {
         shippingRate: session?.shipping_cost?.shipping_rate,
         totalAmount: session.amount_total ? session.amount_total / 100 : 0,
         dateAdded: orderItems.length > 0 ? new Date(orderItems[0].dateAdded) : new Date(),
+        hotelName: orderItems.length > 0 ? orderItems[0].hotelName : "N/A",
+        pickupTime: orderItems.length > 0 ? orderItems[0].pickupTime : "N/A",
+        childrenQuantity: orderItems.length > 0 ? orderItems[0].childrenQuantity : 0,
       });
       // Save the order to the database
       await newOrder.save();
