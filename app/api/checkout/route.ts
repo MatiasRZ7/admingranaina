@@ -36,25 +36,31 @@ export async function POST(req: NextRequest) {
       },
       shipping_options: [
       ],
-      line_items: cartItems.map((cartItem: any) => ({
-        price_data: {
-          currency: "eur",
-          product_data: {
-            name: cartItem.item.title,
-            metadata: {
-              productId: cartItem.item._id,
-              ...(cartItem.size && { size: cartItem.size }),
-              ...(cartItem.color && { color: cartItem.color }),
-              ...(cartItem.childrenQuantity && { childrenQuantity: cartItem.childrenQuantity }),
-              ...(cartItem.hotelName && { hotelName: cartItem.hotelName }),
-              ...(cartItem.pickupTime && { pickupTime: cartItem.pickupTime }),
-              dateAdded: cartItem.dateAdded ? new Date(cartItem.dateAdded).toISOString() : new Date().toISOString(),
+      line_items: cartItems.map((cartItem: any) => {
+        // Calculate the total price for this cart item, considering adults and children
+        const totalPrice = cartItem.item.price * cartItem.quantity + (cartItem.childrenQuantity || 0) * (cartItem.item.price - 10);
+
+        return {
+          price_data: {
+            currency: "eur",
+            product_data: {
+              name: cartItem.item.title,
+              metadata: {
+                productId: cartItem.item._id,
+                ...(cartItem.size && { size: cartItem.size }),
+                ...(cartItem.color && { color: cartItem.color }),
+                ...(cartItem.childrenQuantity && { childrenQuantity: cartItem.childrenQuantity }),
+                ...(cartItem.hotelName && { hotelName: cartItem.hotelName }),
+                ...(cartItem.pickupTime && { pickupTime: cartItem.pickupTime }),
+                dateAdded: cartItem.dateAdded ? new Date(cartItem.dateAdded).toISOString() : new Date().toISOString(),
+              },
+              // Use the total price for this cart item
+              unit_amount: Math.round(totalPrice * 0.5) * 100,
             },
-          },
-          unit_amount: Math.round((cartItem.item.price * 0.5) * 100),
-        },
-        quantity: cartItem.quantity,
-      })),
+            quantity: 1,
+          }
+        };
+      }),
       client_reference_id: customer.clerkId,
       success_url: `${process.env.ECOMMERCE_STORE_URL}/payment_success`,
       cancel_url: `${process.env.ECOMMERCE_STORE_URL}/cart`,
