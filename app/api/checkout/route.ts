@@ -43,6 +43,8 @@ export async function POST(req: NextRequest) {
         return {
           price_data: {
             currency: "eur",
+            // Use the total price for this cart item
+            unit_amount: Math.round(totalPrice * 0.5) * 100,
             product_data: {
               name: cartItem.item.title,
               metadata: {
@@ -54,8 +56,6 @@ export async function POST(req: NextRequest) {
                 ...(cartItem.pickupTime && { pickupTime: cartItem.pickupTime }),
                 dateAdded: cartItem.dateAdded ? new Date(cartItem.dateAdded).toISOString() : new Date().toISOString(),
               },
-              // Use the total price for this cart item
-              unit_amount: Math.round(totalPrice * 0.5) * 100,
             },
           },
           quantity: 1,
