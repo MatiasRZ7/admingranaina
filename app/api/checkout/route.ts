@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       line_items: cartItems.map((cartItem: any) => {
         // Calculate the total price for this cart item, considering adults and children
         const totalPrice = cartItem.item.price * cartItem.quantity + (cartItem.childrenQuantity || 0) * (cartItem.item.price - 10);
-
+      
         return {
           price_data: {
             currency: "eur",
@@ -57,8 +57,8 @@ export async function POST(req: NextRequest) {
               // Use the total price for this cart item
               unit_amount: Math.round(totalPrice * 0.5) * 100,
             },
-            quantity: 1,
-          }
+          },
+          quantity: 1,
         };
       }),
       client_reference_id: customer.clerkId,
