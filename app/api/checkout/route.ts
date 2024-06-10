@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
               dateAdded: cartItem.dateAdded ? new Date(cartItem.dateAdded).toISOString() : new Date().toISOString(),
             },
           },
-          unit_amount: Math.round(cartItem.item.price),
+          unit_amount: Math.round(cartItem.item.price * 100),
         },
         quantity: cartItem.quantity,
       })),
