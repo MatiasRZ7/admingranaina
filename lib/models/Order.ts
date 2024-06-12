@@ -36,10 +36,10 @@ const orderSchema = new mongoose.Schema({
     type: String,
   },
   childrenQuantity: {
-    type: Number,
+    type: String,
   },
   adultQuantity: {
-    type: Number,
+    type: String,
   },
 });
 const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
