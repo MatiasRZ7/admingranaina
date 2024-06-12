@@ -25,7 +25,10 @@ export async function POST(req: NextRequest) {
       });
     }
     cartItems.forEach((cartItem: any, index: number) => {
-      console.log(`[checkout_POST] Cart Item ${index + 1} dateAdded:`, cartItem.dateAdded);
+      console.log(
+        `[checkout_POST] Cart Item ${index + 1} dateAdded:`,
+        cartItem.dateAdded
+      );
     });
     // Create a new checkout session
     const session = await stripe.checkout.sessions.create({
@@ -34,12 +37,12 @@ export async function POST(req: NextRequest) {
       shipping_address_collection: {
         allowed_countries: ["US", "CA", "DE", "GB", "FR", "IT", "ES"],
       },
-      shipping_options: [
-      ],
+      shipping_options: [],
       line_items: cartItems.map((cartItem: any) => {
         // Calculate the total price for this cart item, considering adults and children
-        const totalPrice = cartItem.item.price * cartItem.quantity + (cartItem.childrenQuantity || 0) * (cartItem.item.price - 10);
-      
+        const totalPrice =
+          cartItem.item.price * (cartItem.adultQuantity || 0) +
+          (cartItem.childrenQuantity || 0) * (cartItem.item.price - 10);
         return {
           price_data: {
             currency: "eur",
@@ -51,11 +54,17 @@ export async function POST(req: NextRequest) {
                 productId: cartItem.item._id,
                 ...(cartItem.size && { size: cartItem.size }),
                 ...(cartItem.color && { color: cartItem.color }),
-                ...(cartItem.childrenQuantity && { childrenQuantity: cartItem.childrenQuantity }),
-                ...(cartItem.adultQuantity && { adultQuantity: cartItem.adultQuantity }),
+                ...(cartItem.childrenQuantity && {
+                  childrenQuantity: cartItem.childrenQuantity,
+                }),
+                ...(cartItem.adultQuantity && {
+                  adultQuantity: cartItem.adultQuantity,
+                }),
                 ...(cartItem.hotelName && { hotelName: cartItem.hotelName }),
                 ...(cartItem.pickupTime && { pickupTime: cartItem.pickupTime }),
-                dateAdded: cartItem.dateAdded ? new Date(cartItem.dateAdded).toISOString() : new Date().toISOString(),
+                dateAdded: cartItem.dateAdded
+                  ? new Date(cartItem.dateAdded).toISOString()
+                  : new Date().toISOString(),
               },
             },
           },
@@ -71,6 +80,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(session, { headers: corsHeaders });
   } catch (err) {
     console.log("[checkout_POST]", err);
-    return new NextResponse("Internal Server Error", { status: 500, headers: corsHeaders });
+    return new NextResponse("Internal Server Error", {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 }
