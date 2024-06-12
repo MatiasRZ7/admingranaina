@@ -42,6 +42,7 @@ export const POST = async (req: NextRequest) => {
               color: item.price.product.metadata.color || "N/A",
               size: item.price.product.metadata.size || "N/A",
               childrenQuantity: item.price.product.metadata.childrenQuantity || "N/A",
+              adultQuantity: item.price.product.metadata.adultQuantity || "N/A",
               hotelName: item.price.product.metadata.hotelName || "N/A",
               pickupTime: item.price.product.metadata.pickupTime || "N/A",
               quantity: item.quantity,
@@ -81,6 +82,7 @@ export const POST = async (req: NextRequest) => {
         hotelName: orderItems.length > 0 ? orderItems[0].hotelName : "N/A",
         pickupTime: orderItems.length > 0 ? orderItems[0].pickupTime : "N/A",
         childrenQuantity: orderItems.length > 0 ? orderItems[0].childrenQuantity : 0,
+        adultQuantity: orderItems.length > 0 ? orderItems[0].adultQuantity : 0,
       });
       // Save the order to the database
       await newOrder.save();

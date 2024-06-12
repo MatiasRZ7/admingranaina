@@ -52,6 +52,7 @@ export async function POST(req: NextRequest) {
                 ...(cartItem.size && { size: cartItem.size }),
                 ...(cartItem.color && { color: cartItem.color }),
                 ...(cartItem.childrenQuantity && { childrenQuantity: cartItem.childrenQuantity }),
+                ...(cartItem.adultQuantity && { adultQuantity: cartItem.adultQuantity }),
                 ...(cartItem.hotelName && { hotelName: cartItem.hotelName }),
                 ...(cartItem.pickupTime && { pickupTime: cartItem.pickupTime }),
                 dateAdded: cartItem.dateAdded ? new Date(cartItem.dateAdded).toISOString() : new Date().toISOString(),
