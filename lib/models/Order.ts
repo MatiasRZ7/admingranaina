@@ -38,6 +38,9 @@ const orderSchema = new mongoose.Schema({
   childrenQuantity: {
     type: Number,
   },
+  adultQuantity: {
+    type: Number,
+  },
 });
 const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
 
