@@ -33,4 +33,16 @@ export const columns: ColumnDef<OrderColumnType>[] = [
     accessorKey: "dateAdded",
     header: "Tour el dia:",
   },
+  {
+    accessorKey: "childrenQuantity",
+    header: "Niños:",
+  },
+  {
+    accessorKey: "adultQuantity",
+    header: "Adultos:",
+  },
+  {
+    accessorKey: "hotelName",
+    header: "Hotel:",
+  },
 ];

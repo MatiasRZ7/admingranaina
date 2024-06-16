@@ -27,6 +27,9 @@ export const GET = async (req: NextRequest) => {
             totalAmount: order.totalAmount,
             createdAt: format(order.createdAt, "MMM dd, yyyy"),
             dateAdded: format(order.dateAdded, "MMM dd, yyyy"),
+            childrenQuantity: order.childrenQuantity,
+            adultQuantity: order.adultQuantity,
+            hotelName: order.hotelName,
         }
     }));
 
